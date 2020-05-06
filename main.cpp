@@ -256,7 +256,7 @@ int main() {
     char *text = readTextFromFile(textFile, &textSize);
     prepareText(text, textSize);
 
-    HashTable hashTable(4597, hash5);
+    HashTable hashTable(4597, hash5asm);
     fillTable(hashTable, text, textSize);
 
     unsigned int startTime = clock();
