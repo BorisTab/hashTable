@@ -1,3 +1,4 @@
+//#define WITHOUT_OPT
 #include <iostream>
 #include "list.h"
 #include "fileRead.h"
@@ -256,7 +257,12 @@ int main() {
     char *text = readTextFromFile(textFile, &textSize);
     prepareText(text, textSize);
 
+#ifdef WITHOUT_OPT
     HashTable hashTable(4597, hash5);
+#else
+    HashTable hashTable(4597, hash5asm);
+#endif
+
     fillTable(hashTable, text, textSize);
 
     unsigned int startTime = clock();

@@ -198,8 +198,10 @@ public:
 
         Node <elemType> *currentPointer = head;
         while (currentPointer) {
+#ifdef WITHOUT_OPT
+            if (!myStrcmp(currentPointer->value, val)) {
+#else
             int equal = 0;
-
             asm (".intel_syntax noprefix\n"
                  "            xor rax, rax\n"
                  "            mov   bl, 0\n"
@@ -221,6 +223,7 @@ public:
             );
 
             if (!equal) {
+#endif
                 valPointer = currentPointer;
                 break;
             }
