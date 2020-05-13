@@ -198,29 +198,32 @@ public:
 
         Node <elemType> *currentPointer = head;
         while (currentPointer) {
-//            int equal = 0;
-//
-//            asm (".intel_syntax noprefix\n"
-//                 "            xor rax, rax\n"
-//                 "            mov   bl, 0\n"
-//                 "            cld\n"
-//
-//                 ".compare:   cmpsb\n"
-//                 "            jne   .endCmp\n"
-//                 "            dec   rsi\n"
-//                 "            lodsb\n"
-//                 "            cmp   bl, al\n"
-//                 "            jne    .compare\n"
-//
-//                 ".endCmp:    mov   al, [rsi - 1]\n"
-//                 "            sub   al, [rdi - 1]\n"
-//                 ".att_syntax prefix\n"
-//            : "=a"(equal)
-//            : "S"(currentPointer->value), "D" (val)
-//            : "rbx"
-//            );
-
+#ifdef WITHOUT_OPT
             if (!myStrcmp(currentPointer->value, val)) {
+#else
+            int equal = 0;
+            asm (".intel_syntax noprefix\n"
+                 "            xor rax, rax\n"
+                 "            mov   bl, 0\n"
+                 "            cld\n"
+
+                 ".compare:   cmpsb\n"
+                 "            jne   .endCmp\n"
+                 "            dec   rsi\n"
+                 "            lodsb\n"
+                 "            cmp   bl, al\n"
+                 "            jne    .compare\n"
+
+                 ".endCmp:    mov   al, [rsi - 1]\n"
+                 "            sub   al, [rdi - 1]\n"
+                 ".att_syntax prefix\n"
+            : "=a"(equal)
+            : "S"(currentPointer->value), "D" (val)
+            : "rbx"
+            );
+
+            if (!equal) {
+#endif
                 valPointer = currentPointer;
                 break;
             }
